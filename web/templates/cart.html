@@ -1,0 +1,17 @@
+{{define "title"}}Your cart · Mercadito{{end}}
+{{define "content"}}
+<h1>Your cart</h1>
+{{if .Message}}<p class="notice">{{.Message}}</p>{{end}}
+{{if .Lines}}
+<table>
+  <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
+  <tbody>
+  {{range .Lines}}
+    <tr><td><a href="/product/{{.Product.ID}}">{{.Product.Name}}</a></td><td>{{.Qty}}</td><td>{{price .Product.PriceCents}}</td><td>{{price .SubtotalCents}}</td></tr>
+  {{end}}
+  </tbody>
+  <tfoot><tr><th colspan="3">Total</th><th>{{price .TotalCents}}</th></tr></tfoot>
+</table>
+<form action="/checkout" method="post"><button type="submit">Place order</button></form>
+{{else}}<p>Your cart is empty. <a href="/">Keep shopping</a></p>{{end}}
+{{end}}

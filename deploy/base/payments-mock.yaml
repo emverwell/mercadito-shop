@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payments-mock
+  labels:
+    app: payments-mock
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payments-mock
+  template:
+    metadata:
+      labels:
+        app: payments-mock
+    spec:
+      containers:
+      - name: payments-mock
+        image: REPLACE_ME
+        ports:
+        - containerPort: 8084
+        envFrom:
+        - configMapRef:
+            name: shop-config
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payments-mock
+  labels:
+    app: payments-mock
+spec:
+  selector:
+    app: payments-mock
+  ports:
+  - port: 8084
+    targetPort: 8084

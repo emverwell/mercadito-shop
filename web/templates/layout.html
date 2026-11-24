@@ -1,0 +1,22 @@
+{{define "layout"}}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{block "title" .}}Mercadito{{end}}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/">Mercadito</a>
+    <form class="search" action="/search" method="get">
+      <input type="search" name="q" value="{{.Query}}" placeholder="Search products" aria-label="Search products">
+      <button type="submit">Search</button>
+    </form>
+    <a class="cart-link" href="/cart">Cart <span id="cart-count" class="badge">0</span></a>
+  </header>
+  <main>{{template "content" .}}</main>
+  <footer>Served by <code>{{.PodName}}</code></footer>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>{{end}}

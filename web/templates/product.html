@@ -1,0 +1,26 @@
+{{define "title"}}{{.Product.Name}} · Mercadito{{end}}
+{{define "content"}}
+<article class="product">
+  <img src="/img/{{.Product.ID}}?w=480" width="480" height="360" alt="{{.Product.Name}}">
+  <div>
+    <h1>{{.Product.Name}}</h1>
+    <p class="muted">{{.Product.Category}} · {{.Product.Stock}} in stock</p>
+    <p class="price big">{{price .Product.PriceCents}}</p>
+    <form action="/cart/add" method="post">
+      <input type="hidden" name="product_id" value="{{.Product.ID}}">
+      <label>Qty <select name="qty">{{range $i := .Quantities}}<option value="{{$i}}">{{$i}}</option>{{end}}</select></label>
+      <button type="submit">Add to cart</button>
+    </form>
+  </div>
+</article>
+<h2>You may also like</h2>
+<ul class="grid small">
+  {{range .Recommendations}}
+  <li class="card">
+    <a href="/product/{{.ID}}"><img src="/img/{{.ID}}?w=160" width="160" height="120" alt="{{.Name}}" loading="lazy"></a>
+    <h3><a href="/product/{{.ID}}">{{.Name}}</a></h3>
+    <p class="price">{{price .PriceCents}}</p>
+  </li>
+  {{end}}
+</ul>
+{{end}}

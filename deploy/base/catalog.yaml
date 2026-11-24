@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog
+  labels:
+    app: catalog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog
+  template:
+    metadata:
+      labels:
+        app: catalog
+    spec:
+      containers:
+      - name: catalog
+        image: REPLACE_ME
+        ports:
+        - containerPort: 8081
+        envFrom:
+        - configMapRef:
+            name: shop-config
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: shop-postgres
+              key: url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog
+  labels:
+    app: catalog
+spec:
+  selector:
+    app: catalog
+  ports:
+  - port: 8081
+    targetPort: 8081

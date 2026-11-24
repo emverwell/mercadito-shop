@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart
+  labels:
+    app: cart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cart
+  template:
+    metadata:
+      labels:
+        app: cart
+    spec:
+      containers:
+      - name: cart
+        image: REPLACE_ME
+        ports:
+        - containerPort: 8082
+        envFrom:
+        - configMapRef:
+            name: shop-config
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart
+  labels:
+    app: cart
+spec:
+  selector:
+    app: cart
+  ports:
+  - port: 8082
+    targetPort: 8082

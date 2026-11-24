@@ -1,0 +1,16 @@
+{{define "content"}}
+<h1>{{.Heading}}</h1>
+{{if .Products}}
+<ul class="grid">
+  {{range .Products}}
+  <li class="card">
+    <a href="/product/{{.ID}}"><img src="/img/{{.ID}}?w=240" width="240" height="180" alt="{{.Name}}" loading="lazy"></a>
+    <h2><a href="/product/{{.ID}}">{{.Name}}</a></h2>
+    <p class="muted">{{.Category}}</p>
+    <p class="price">{{price .PriceCents}}</p>
+  </li>
+  {{end}}
+</ul>
+{{else}}<p>No products found.</p>{{end}}
+{{end}}
+{{define "title"}}Mercadito{{end}}

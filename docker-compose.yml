@@ -1,0 +1,106 @@
+# Runs the whole shop locally: docker compose up --build
+# Storefront: http://localhost:${APP_PORT:-8080}
+
+x-build: &build
+  context: .
+
+services:
+  postgres:
+    image: postgres:16
+    command: ["postgres", "-c", "max_connections=50"]
+    environment:
+      POSTGRES_PASSWORD: shop
+      POSTGRES_DB: shop
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shop"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+
+  migrate:
+    build: { <<: *build, args: { SERVICE: catalog } }
+    image: mercadito/catalog:dev
+    command: ["migrate"]
+    environment:
+      DATABASE_URL: postgres://postgres:shop@postgres:5432/shop?sslmode=disable
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: "no"
+
+  catalog:
+    build: { <<: *build, args: { SERVICE: catalog } }
+    image: mercadito/catalog:dev
+    environment:
+      DATABASE_URL: postgres://postgres:shop@postgres:5432/shop?sslmode=disable
+      POD_NAME: catalog-local
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD", "/app", "healthcheck"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+      start_period: 5s
+
+  cart:
+    build: { <<: *build, args: { SERVICE: cart } }
+    image: mercadito/cart:dev
+    environment:
+      POD_NAME: cart-local
+    healthcheck:
+      test: ["CMD", "/app", "healthcheck"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+
+  payments-mock:
+    build: { <<: *build, args: { SERVICE: payments-mock } }
+    image: mercadito/payments-mock:dev
+    environment:
+      POD_NAME: payments-local
+    healthcheck:
+      test: ["CMD", "/app", "healthcheck"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+
+  checkout:
+    build: { <<: *build, args: { SERVICE: checkout } }
+    image: mercadito/checkout:dev
+    environment:
+      DATABASE_URL: postgres://postgres:shop@postgres:5432/shop?sslmode=disable
+      POD_NAME: checkout-local
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      cart: { condition: service_healthy }
+      payments-mock: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "/app", "healthcheck"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+
+  storefront:
+    build: { <<: *build, args: { SERVICE: storefront } }
+    image: mercadito/storefront:dev
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    environment:
+      POD_NAME: storefront-local
+    depends_on:
+      catalog: { condition: service_healthy }
+      cart: { condition: service_healthy }
+      checkout: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "/app", "healthcheck"]
+      interval: 3s
+      timeout: 3s
+      retries: 15

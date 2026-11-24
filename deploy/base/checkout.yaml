@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkout
+  labels:
+    app: checkout
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: checkout
+  template:
+    metadata:
+      labels:
+        app: checkout
+    spec:
+      containers:
+      - name: checkout
+        image: REPLACE_ME
+        ports:
+        - containerPort: 8083
+        envFrom:
+        - configMapRef:
+            name: shop-config
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: shop-postgres
+              key: url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: checkout
+  labels:
+    app: checkout
+spec:
+  selector:
+    app: checkout
+  ports:
+  - port: 8083
+    targetPort: 8083

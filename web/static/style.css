@@ -1,0 +1,26 @@
+:root { --ink:#1d2433; --muted:#667085; --line:#e4e7ec; --brand:#0b6e4f; --bg:#fafaf7; }
+* { box-sizing: border-box; }
+body { margin:0; font:16px/1.5 system-ui, sans-serif; color:var(--ink); background:var(--bg); }
+.top { display:flex; gap:16px; align-items:center; padding:12px 24px; background:#fff; border-bottom:1px solid var(--line); }
+.brand { font-weight:700; font-size:1.25rem; color:var(--brand); text-decoration:none; }
+.search { flex:1; display:flex; gap:8px; }
+.search input { flex:1; padding:8px 12px; border:1px solid var(--line); border-radius:8px; }
+button { padding:8px 16px; border:0; border-radius:8px; background:var(--brand); color:#fff; font:inherit; cursor:pointer; }
+a { color:var(--brand); }
+.badge { display:inline-block; min-width:1.5em; padding:0 6px; border-radius:99px; background:var(--ink); color:#fff; text-align:center; font-size:.85rem; }
+main { max-width:1100px; margin:0 auto; padding:24px; }
+.grid { list-style:none; padding:0; display:grid; gap:16px; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); }
+.grid.small { grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); }
+.card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px; }
+.card img { width:100%; height:auto; border-radius:8px; background:var(--line); }
+.card h2, .card h3 { font-size:1rem; margin:8px 0 0; }
+.muted { color:var(--muted); margin:4px 0; }
+.price { font-weight:600; margin:4px 0; }
+.price.big { font-size:1.5rem; }
+.product { display:grid; gap:24px; grid-template-columns:minmax(0,480px) 1fr; }
+.product img { max-width:100%; height:auto; border-radius:12px; }
+table { width:100%; border-collapse:collapse; background:#fff; margin-bottom:16px; }
+th, td { text-align:left; padding:10px; border-bottom:1px solid var(--line); }
+.notice { padding:10px 14px; background:#fff4e5; border:1px solid #f5c26b; border-radius:8px; }
+footer { padding:16px 24px; color:var(--muted); font-size:.85rem; text-align:center; }
+@media (max-width:700px) { .product { grid-template-columns:1fr; } .top { flex-wrap:wrap; } }

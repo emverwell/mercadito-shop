@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shop-config
+data:
+  CATALOG_URL: http://catalog:8081
+  CART_URL: http://cart:8082
+  CHECKOUT_URL: http://checkout:8083
+  PAYMENTS_URL: http://payments-mock:8084
+  WARMUP_SECONDS: "45"
+  THUMB_CACHE_MAX_MB: "0"
+  CART_STORE: memory
+  DB_MAX_CONNS: "2"
+  SHUTDOWN_DRAIN_SECONDS: "0"
+  PAYMENT_LATENCY_MS: "50"
+  PAYMENT_JITTER_MS: "0"
+  PAYMENT_FAILURE_RATE: "0"
+  PAYMENT_TIMEOUT_MS: "30000"
+  PAYMENT_RETRIES: "0"
+  PAYMENT_BACKOFF_MS: "100"

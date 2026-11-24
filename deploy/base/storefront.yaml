@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storefront
+  labels:
+    app: storefront
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: storefront
+  template:
+    metadata:
+      labels:
+        app: storefront
+    spec:
+      containers:
+      - name: storefront
+        image: REPLACE_ME
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: shop-config
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: storefront
+  labels:
+    app: storefront
+spec:
+  selector:
+    app: storefront
+  ports:
+  - port: 8080
+    targetPort: 8080
