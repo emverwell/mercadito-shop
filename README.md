@@ -2,6 +2,11 @@
 
 A small online store built from five Go services: a server-rendered storefront, a product catalog, a cart, a checkout and a mock payment provider. Postgres 16 and Redis 7 are the backing services.
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Go](https://img.shields.io/badge/Go-1.27-00ADD8?logo=go&logoColor=white)](go.mod)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](Dockerfile)
+[![Trivy scan](https://img.shields.io/badge/container%20scan-Trivy-1904DA?logo=trivy&logoColor=white)](Makefile)
+
 ## Architecture
 
 ```mermaid
